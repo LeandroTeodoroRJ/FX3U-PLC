@@ -1,0 +1,50 @@
+MAIN COMMENTS:
+
+LINE 0:
+READ ANALOG INPUT
+	X004  --  Operator start switch
+	M8011  -- Sytem auto 10ms switch
+	RD3A K0 K0 D0
+		RD3A  --  Analog read instruction
+		K0  --  Module number (K0 is default to main PLC)
+		K0  --  First analog input channel (valid AD0 to AD5)
+		D0  --  Storage address register
+
+LINE 9:
+CAST TO FLOAT POINT
+	M8000  -- It's normally closed during operation
+	FLT D0 D1
+		FLT  ::  Float point convert command
+		D0  --  Source value
+		D1  --  Address destination
+
+LINE 15:
+CONVERT INPUT ANALOG VALUE TO PERCENT SCALE
+	M8000  -- It's normally closed during operation
+	DEDIV D1 E4095 D3
+		DEDIV  --  Float point divide operator
+		D1  --  Absolute input value
+		E4095  --  End of scale for analog/digital conversor (12 bits)
+		D3  --  Percent float point register address
+
+	Percent_value = (Input - Min) / (Max - Min)	
+		Percent_value  --  Convert absolute scale to relative scale	
+		Input  --  Absolute value read
+		Max  --  Maximum absolute value 
+		Min  --  Minimum absolute value
+		(Max - Min)  --  Value range
+
+LINE 29:
+RESTORE ORIGINAL ABSOLUTE VALUE
+	M8000  -- It's normally closed during operation
+	DEMUL D3 E10 D5
+		DEMUL  --  Float point multiplication operator
+		D3  --  Relative input scale
+		E10  --  Maximum absolute output value
+		D5  --  Output absolute scale
+
+	Absolute_value = Percent_value * (Max - Min) + Min
+		Absolute_value   --  Convert relative scale to absolute scale
+
+
+

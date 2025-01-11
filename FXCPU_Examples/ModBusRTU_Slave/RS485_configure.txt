@@ -1,0 +1,31 @@
+[ Line 0 ]
+	M8002  ::  Power on pulse
+	D8120  ::  Special register to RS485 Setup
+	RS585 Setup:
+		      D - FEDCBA9876543210
+	Load in D8120 <-  1000000010010001  = H8091 (Master)
+			  0100000010010001  = H4091 (Slave)
+	B0:	1	--Data lenght 8 Bits
+	B1-B2: 	00	--Parity None
+	B3:	0	--Stop bits 1
+	B4-B7:	1001	--Transfer rate 19.2 Kbps
+	B8:	0	--Start symbol - None
+	B9:	0	--Terminator - None
+	B10-B11:00	-- Unavailable - NULL
+	B12-B15:0100	--ModBus RTU Slave
+
+	D8121  ::  Special register to storage Modbus Master ID(Address)
+	Load in D8121 <- 2
+
+	D8129  ::  Configure time out flag (miliseconds)
+	Load in D8129 <- 200
+
+[ Line 16 ]
+	
+
+[ Line 22 ]
+	
+
+[ Line 28 ]
+
+

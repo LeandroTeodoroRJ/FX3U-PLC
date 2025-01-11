@@ -1,0 +1,67 @@
+[ Line 0 ]
+	M8002  ::  Power on pulse
+	D8120  ::  Special register to RS485 Setup
+	RS585 Setup:
+		      D - FEDCBA9876543210
+	Load in D8120 <-  1000000010010001  = H8091
+	B0:	1	--Data lenght 8 Bits
+	B1-B2: 	00	--Parity None
+	B3:	0	--Stop bits 1
+	B4-B7:	1001	--Transfer rate 19.2 Kbps
+	B8:	0	--Start symbol - None
+	B9:	0	--Terminator - None
+	B10-B11:00	-- Unavailable - NULL
+	B12-B15:1000	--ModBus RTU Master
+
+	D8121  ::  Special register to storage Modbus Master ID(Address)
+	Load in D8121 <- 0
+
+	D8129  ::  Configure time out flag (miliseconds)
+	Load in D8129 <- 5000
+
+[ Line 16 ]
+	M8012  ::  Create a 100ms pulse.
+	Increment the counter at 100ms.
+
+[ Line 21 ]
+	The counter C0 is 1?
+		Read Operation:
+		IVRD	H203	K0	D2	K10
+		H203
+			High byte = Slave ID(Address) = 02
+			Low byte = Modbus command = Read Holding Resgister = 03
+		K0
+			Data adrress to be read in slave (First address holding register block)
+		D2:
+			PLC register(frist) to sotage data
+		K10:
+			K10 = H000A
+			Hight 8 Bits: 0 to RS485 channel(port), 1 to RS232 channel
+			Low 8 Bits: Number of registers to read = 10 registers (16 bits).
+
+[ Line 35 ]
+	Execute Modbus read implementations.
+	Reset M8123 flag (receive is completed)
+
+[ Line 38 ]
+	The counter C0 is 2?
+		Set M8122 flag (ready to transfer).
+
+
+[ Line 45 ]
+	Execute Modbus write operation.
+	IVWR	H206	K50	D100	K1
+	H206
+		High byte = Slave ID(Address) = 02
+		Low byte = Modbus command = Preset single register = 06
+	K50
+		Data adrress to be write in slave
+	D100:
+		PLC register to send data.
+	K1:
+		K1 = H0001
+		Hight 8 Bits: 0 to RS485 channel(port), 1 to RS232 channel
+		Low 8 Bits: Number of address to write in slave = 1 address
+
+[ Line 55 ]
+	Reset C0 counter.
