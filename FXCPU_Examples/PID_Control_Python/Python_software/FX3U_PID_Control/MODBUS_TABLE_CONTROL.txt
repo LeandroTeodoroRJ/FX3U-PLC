@@ -1,0 +1,7 @@
+MODBUS TABLE
+ADDRESS         OWNER           DESCRIPTION
+40000           FAC-IO          LEVEL METER
+40001           FAC-IO          FLOW METER
+40002           FAC-IO          SET POINT
+40003           PID CONTROL     PID OUTPUT CONTROL
+40004           PLC FX3U        ACTUATOR VALUE
